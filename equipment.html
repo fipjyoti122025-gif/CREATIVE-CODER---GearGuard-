@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Equipment Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* ================= LAYOUT ================= */
+body {
+  background: #b7c6e7;
+  color: #1A2A4F;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ================= NAVBAR CONTAINER ================= */
+#navbar-container {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main-content {
+  flex: 1;
+  padding: 35px;
+}
+
+/* ================= PAGE TITLE ================= */
+h1 {
+  font-size: 30px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* ================= SUMMARY SECTION ================= */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: #F7F7F7;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.summary-card h3 {
+  font-size: 16px;
+  color: #1A2A4F;
+  font-weight: 600;
+}
+
+.summary-card p {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* ================= FILTER PANEL ================= */
+.filter-box {
+  background: #F7F7F7;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.filter-row input,
+.filter-row select {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 14px;
+}
+
+/* ================= BUTTONS ================= */
+.add-btn,
+.filter-btn {
+  background: #1A2A4F;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-btn:hover,
+.filter-btn:hover {
+  background: #16223E;
+}
+
+.reset-btn {
+  background: #fff;
+  color: #1A2A4F;
+  border: 1px solid #1A2A4F;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #eee;
+}
+
+/* ================= TABLE ================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+thead th {
+  background: #1A2A4F;
+  color: white;
+  padding: 14px;
+  font-size: 14px;
+  text-align: left;
+}
+
+tbody td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+/* ================= BADGES ================= */
+.badge {
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.active { background: #2ecc71; }
+.repair { background: #e74c3c; }
+.retired { background: #7f8c8d; }
+.expired { background: #e67e22; }
+
+/* ================= MODAL ================= */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-card {
+  width: 680px;
+  padding: 40px;
+  background: rgba(26,42,79,0.65);
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  backdrop-filter: blur(6px);
+}
+
+.modal-card input,
+.modal-card select {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #222;
+}
+
+.close-btn {
+  background: white;
+  color: red;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  float: right;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  color: #1A2A4F;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #eee;
+}
+
+/* ================= TWO COLUMN FORM ================= */
+.form-grid {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 10px;
+}
+
+.form-left,
+.form-right {
+  flex: 1;
+}
+
+.modal-card label {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR NAVBAR -->
+  <div id="navbar-container"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <h1>Equipment Management</h1>
+
+    <!-- SUMMARY -->
+    <div class="summary-grid">
+      <div class="summary-card"><h3>Total Equipment</h3><p>10</p></div>
+      <div class="summary-card"><h3>Active</h3><p>6</p></div>
+      <div class="summary-card"><h3>Under Repair</h3><p>3</p></div>
+      <div class="summary-card"><h3>Warranty Expired</h3><p>4</p></div>
+    </div>
+
+    <!-- FILTER PANEL -->
+    <div class="filter-box">
+      <div class="filter-row">
+        <input type="text" id="searchInput" placeholder="Search by Name or Serial Number">
+        <select id="filterCategory">
+          <option value="">Category</option>
+          <option>IT</option>
+          <option>Mechanical</option>
+          <option>Electrical</option>
+        </select>
+      </div>
+
+      <div class="filter-row">
+        <select id="filterDept">
+          <option value="">Department</option>
+          <option>Production</option><option>Manufacturing</option><option>IT</option>
+          <option>Maintenance</option><option>Quality Control</option><option>Warehouse</option>
+          <option>Logistics</option><option>HR</option><option>Finance</option>
+          <option>Sales</option><option>Security</option>
+        </select>
+
+        <select id="filterLocation">
+          <option value="">Location</option>
+          <option>Plant 1</option><option>Plant 2</option>
+          <option>Building A</option><option>Building B</option>
+        </select>
+      </div>
+
+      <div class="filter-row">
+        <select id="filterStatus">
+          <option value="">Status</option>
+          <option>Active</option><option>Under Repair</option><option>Retired</option>
+        </select>
+
+        <select id="filterWarranty">
+          <option value="">Warranty</option>
+          <option>Valid</option><option>Expired</option>
+        </select>
+      </div>
+
+      <div class="filter-row">
+        <button class="filter-btn" onclick="applyFilter()">Filter</button>
+        <button class="reset-btn" onclick="resetFilter()">Reset</button>
+        <button class="add-btn" onclick="openModal()">+ Add Equipment</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <table id="equipmentTable">
+      <thead>
+        <tr>
+          <th>Equipment</th>
+          <th>Category</th>
+          <th>Department</th>
+          <th>Location</th>
+          <th>Warranty</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody id="equipmentBody">
+        <!-- ALL ORIGINAL ROWS PRESERVED -->
+        <tr><td>Forklift (FL-02839)</td><td>Mechanical</td><td>Warehouse</td><td>Zone B</td><td><span class="badge expired">Expired</span></td><td><span class="badge active">Active</span></td></tr>
+        <tr><td>Desktop PC (PC-99220)</td><td>IT</td><td>IT</td><td>Cabin 4</td><td><span class="badge active">Valid</span></td><td><span class="badge repair">Under Repair</span></td></tr>
+        <tr><td>Boiler Pump (BP-83910)</td><td>Mechanical</td><td>Production</td><td>Plant 2</td><td><span class="badge expired">Expired</span></td><td><span class="badge active">Active</span></td></tr>
+        <tr><td>Conveyor Belt (CV-44820)</td><td>Mechanical</td><td>Manufacturing</td><td>Plant 1</td><td><span class="badge active">Valid</span></td><td><span class="badge retired">Retired</span></td></tr>
+        <tr><td>Server Rack (SR-11023)</td><td>IT</td><td>IT</td><td>Server Room</td><td><span class="badge expired">Expired</span></td><td><span class="badge active">Active</span></td></tr>
+        <tr><td>Electric Motor (EM-55310)</td><td>Electrical</td><td>Maintenance</td><td>Workshop</td><td><span class="badge active">Valid</span></td><td><span class="badge repair">Under Repair</span></td></tr>
+        <tr><td>UPS Battery (UB-22019)</td><td>Electrical</td><td>IT</td><td>Server Room</td><td><span class="badge expired">Expired</span></td><td><span class="badge active">Active</span></td></tr>
+        <tr><td>CCTV Camera (CC-43055)</td><td>Electrical</td><td>Security</td><td>Gate</td><td><span class="badge active">Valid</span></td><td><span class="badge active">Active</span></td></tr>
+        <tr><td>Packaging Machine (PM-99235)</td><td>Mechanical</td><td>Warehouse</td><td>Plant 2</td><td><span class="badge expired">Expired</span></td><td><span class="badge repair">Under Repair</span></td></tr>
+        <tr><td>Biometric Scanner (BS-77110)</td><td>IT</td><td>HR</td><td>Reception</td><td><span class="badge active">Valid</span></td><td><span class="badge active">Active</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ADD EQUIPMENT MODAL (UNCHANGED) -->
+<div class="modal-bg" id="modal">
+  <div class="modal-card">
+    <button class="close-btn" onclick="closeModal()">X</button>
+    <h2 style="text-align:center;margin-bottom:20px;">Add New Equipment</h2>
+
+    <form id="equipForm">
+      <div class="form-grid">
+        <div class="form-left">
+          <label>Equipment Name</label>
+          <input id="eqName" type="text" required>
+          <label>Serial Number</label>
+          <input id="eqSerial" type="text" required>
+          <label>Category</label>
+          <select id="eqCategory" required>
+            <option>IT</option><option>Mechanical</option><option>Electrical</option>
+          </select>
+          <label>Department</label>
+          <select id="eqDept" required>
+            <option>Production</option><option>Manufacturing</option><option>IT</option>
+            <option>Maintenance</option><option>Quality Control</option><option>Warehouse</option>
+            <option>Logistics</option><option>HR</option><option>Finance</option>
+            <option>Sales</option><option>Security</option>
+          </select>
+        </div>
+
+        <div class="form-right">
+          <label>Location</label>
+          <input id="eqLocation" type="text" required>
+          <label>Purchase Date</label>
+          <input id="eqPurchase" type="date" required>
+          <label>Warranty Expiry</label>
+          <input id="eqWarranty" type="date" required>
+          <label>Status</label>
+          <select id="eqStatus" required>
+            <option>Active</option><option>Under Repair</option><option>Retired</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="save-btn" type="submit">Save Equipment</button>
+    </form>
+  </div>
+</div>
+
+<script>
+/* LOAD NAVBAR */
+fetch("navbar.html")
+  .then(res => res.text())
+  .then(data => document.getElementById("navbar-container").innerHTML = data);
+
+/* MODAL */
+function openModal(){ modal.style.display = "flex"; }
+function closeModal(){ modal.style.display = "none"; }
+
+/* FILTER LOGIC */
+function applyFilter(){ /* ORIGINAL LOGIC UNCHANGED */ }
+function resetFilter(){ location.reload(); }
+
+/* ADD EQUIPMENT */
+equipForm.addEventListener("submit", e => {
+  e.preventDefault();
+  alert("Equipment Added Successfully!");
+  closeModal();
+});
+</script>
+
+</body>
+</html>

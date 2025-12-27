@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Equipment Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>Equipment Manager</h1>
+                    <p class="subtitle">Odoo Hackathon 2024</p>
+                </div>
+                <div class="user-section">
+                    <span class="user-name">Manager Portal</span>
+                    <div class="user-avatar">M</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="dashboard-main">
+            <!-- Stats Cards -->
+            <section class="stats-grid">
+                <div class="stat-card stat-primary">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Total Equipment</h3>
+                        <p class="stat-value" id="totalEquipment">0</p>
+                        <span class="stat-trend positive">+12 this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-warning">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Open Requests</h3>
+                        <p class="stat-value" id="openRequests">0</p>
+                        <span class="stat-trend">Awaiting action</span>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-danger">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Overdue Requests</h3>
+                        <p class="stat-value" id="overdueRequests">0</p>
+                        <span class="stat-trend negative">Needs attention</span>
+                    </div>
+                </div>
+
+                <div class="stat-card stat-success">
+                    <div class="stat-icon">👷</div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Technicians Active</h3>
+                        <p class="stat-value" id="activeTechs">0</p>
+                        <span class="stat-trend">Online today</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-card">
+                    <h3 class="chart-title">Request Status Overview</h3>
+                    <div class="chart-content" id="requestChart">
+                        <div class="bar-chart">
+                            <div class="bar-item">
+                                <div class="bar-label">Pending</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar bar-pending" style="width: 65%"></div>
+                                    <span class="bar-value">18</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">In Progress</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar bar-progress" style="width: 45%"></div>
+                                    <span class="bar-value">12</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">Completed</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar bar-completed" style="width: 85%"></div>
+                                    <span class="bar-value">45</span>
+                                </div>
+                            </div>
+                            <div class="bar-item">
+                                <div class="bar-label">Overdue</div>
+                                <div class="bar-wrapper">
+                                    <div class="bar bar-overdue" style="width: 25%"></div>
+                                    <span class="bar-value">7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Equipment by Category</h3>
+                    <div class="chart-content">
+                        <div class="category-list">
+                            <div class="category-item">
+                                <span class="category-name">Manufacturing</span>
+                                <div class="category-bar">
+                                    <div class="category-fill" style="width: 75%"></div>
+                                </div>
+                                <span class="category-count">45</span>
+                            </div>
+                            <div class="category-item">
+                                <span class="category-name">IT Equipment</span>
+                                <div class="category-bar">
+                                    <div class="category-fill" style="width: 60%"></div>
+                                </div>
+                                <span class="category-count">36</span>
+                            </div>
+                            <div class="category-item">
+                                <span class="category-name">Vehicles</span>
+                                <div class="category-bar">
+                                    <div class="category-fill" style="width: 40%"></div>
+                                </div>
+                                <span class="category-count">24</span>
+                            </div>
+                            <div class="category-item">
+                                <span class="category-name">Office</span>
+                                <div class="category-bar">
+                                    <div class="category-fill" style="width: 55%"></div>
+                                </div>
+                                <span class="category-count">33</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity -->
+            <section class="activity-section">
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="activity-list" id="activityList">
+                    <!-- Activity items will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <button class="action-btn btn-primary">
+                    <span class="btn-icon">➕</span>
+                    Add Equipment
+                </button>
+                <button class="action-btn btn-secondary">
+                    <span class="btn-icon">📊</span>
+                    View Reports
+                </button>
+                <button class="action-btn btn-secondary">
+                    <span class="btn-icon">👥</span>
+                    Manage Team
+                </button>
+                <button class="action-btn btn-secondary">
+                    <span class="btn-icon">⚙️</span>
+                    Settings
+                </button>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>&copy; 2024 Equipment Management System - Odoo Hackathon Solution</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

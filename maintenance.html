@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maintenance Request Management</title>
+
+<style>
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+}
+
+/* PAGE */
+body{
+  background:#ffffff;
+  padding:35px;
+}
+
+/* PAGE TITLE */
+h1{
+  font-size:30px;
+  color:#1A2A4F;
+  font-weight:700;
+  margin-bottom:25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* SUMMARY CARDS */
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  margin-bottom:30px;
+}
+
+.summary-card{
+  background:#F7F7F7;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0px 4px 12px rgba(0,0,0,0.1);
+}
+
+.summary-card h3{
+  color:#1A2A4F;
+  font-size:16px;
+  font-weight:600;
+}
+.summary-card p{
+  font-size:28px;
+  font-weight:700;
+  margin-top:10px;
+  color:#333;
+}
+
+/* FILTER BOX */
+.filter-box{
+  background:#F7F7F7;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0px 4px 12px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+}
+
+.filter-row{
+  display:flex;
+  gap:20px;
+  margin-bottom:15px;
+}
+
+.filter-row input,
+.filter-row select{
+  flex:1;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  background:#fff;
+}
+
+.filter-btn{
+  background:#1A2A4F;
+  color:white;
+  padding:12px 20px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.filter-btn:hover{ background:#16223E; }
+
+.reset-btn{
+  background:white;
+  color:#1A2A4F;
+  border:1px solid #1A2A4F;
+  padding:12px 20px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.reset-btn:hover{ background:#e3e3e3; }
+
+/* VIEW TECH BUTTON ABOVE TABLE */
+.view-tech-btn{
+  background:#1A2A4F;
+  color:white;
+  padding:10px 18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-bottom:15px;
+  font-weight:600;
+}
+.view-tech-btn:hover{ background:#16223E; }
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0px 4px 12px rgba(0,0,0,0.1);
+}
+
+thead th{
+  background:#1A2A4F;
+  color:white;
+  padding:14px;
+  text-align:left;
+  font-size:14px;
+}
+
+tbody td{
+  padding:14px;
+  border-bottom:1px solid #eee;
+  font-size:14px;
+}
+
+/* BADGES */
+.badge{
+  padding:5px 10px;
+  border-radius:6px;
+  color:white;
+  font-size:12px;
+  font-weight:600;
+}
+.priority-low{ background:#2ecc71; }
+.priority-medium{ background:#f1c40f; }
+.priority-high{ background:#e67e22; }
+.priority-critical{ background:#e74c3c; }
+.status-open{ background:#3498db; }
+.status-assigned{ background:#9b59b6; }
+.status-progress{ background:#e67e22; }
+.status-completed{ background:#2ecc71; }
+
+/* ACTION BUTTONS */
+.action-btn{
+  background:#1A2A4F;
+  color:white;
+  padding:6px 12px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+  margin-right:6px;
+}
+.action-btn:hover{ background:#16223E; }
+
+/* MODALS */
+.modal-bg{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.modal-card{
+  width:600px;
+  max-height:85vh;
+  overflow-y:auto;
+  padding:30px;
+  background:rgba(26,42,79,0.7);
+  border-radius:18px;
+  color:white;
+  backdrop-filter:blur(6px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-card input,
+.modal-card textarea{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  background:white;
+  color:black;
+  border:1px solid #ccc;
+  margin-bottom:18px;
+  font-size:14px;
+}
+
+.close-btn{
+  float:right;
+  background:white;
+  color:red;
+  border:none;
+  padding:7px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.save-btn{
+  width:100%;
+  padding:12px;
+  background:white;
+  color:#1A2A4F;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+}
+.save-btn:hover{ background:#e3e3e3; }
+
+/* TECHNICIAN LIST */
+.tech-list{
+  background:white;
+  color:black;
+  padding:12px;
+  border-radius:8px;
+  max-height:200px;
+  overflow-y:auto;
+}
+
+.tech-item{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  cursor:pointer;
+}
+.tech-item:hover{
+  background:#f0f0f0;
+}
+
+.selected-tech{
+  background:#1A2A4F !important;
+  color:white !important;
+  font-weight:600 !important;
+}
+
+/* TECHNICIAN STATUS MODAL */
+.tech-dept-block{
+  background:white;
+  color:black;
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:18px;
+}
+
+.tech-dept-title{
+  font-size:17px;
+  font-weight:700;
+  color:#1A2A4F;
+  margin-bottom:10px;
+}
+
+.tech-status-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.tech-status-badge{
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.status-assigned-badge{
+  background:#9b59b6;
+  color:white;
+}
+
+.status-notassigned-badge{
+  background:#2ecc71;
+  color:white;
+}
+</style>
+</head>
+<body>
+
+<h1>
+  Maintenance Request Management
+</h1>
+
+<!-- SUMMARY -->
+<div class="summary-grid">
+  <div class="summary-card"><h3>Total Requests</h3><p>8</p></div>
+  <div class="summary-card"><h3>Open</h3><p>3</p></div>
+  <div class="summary-card"><h3>In Progress</h3><p>3</p></div>
+  <div class="summary-card"><h3>Completed</h3><p>2</p></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-box">
+  <div class="filter-row">
+    <input id="searchInput" type="text" placeholder="Search by ID, Equipment, Technician">
+    <select id="filterDept">
+      <option value="">Department</option>
+      <option>Production</option>
+      <option>IT</option>
+      <option>Maintenance</option>
+      <option>Warehouse</option>
+      <option>Logistics</option>
+      <option>Security</option>
+      <option>HR</option>
+      <option>Finance</option>
+    </select>
+  </div>
+
+  <div class="filter-row">
+    <select id="filterPriority">
+      <option value="">Priority</option>
+      <option>Low</option><option>Medium</option>
+      <option>High</option><option>Critical</option>
+    </select>
+
+    <select id="filterStatus">
+      <option value="">Status</option>
+      <option>Open</option>
+      <option>Assigned</option>
+      <option>In Progress</option>
+      <option>Completed</option>
+    </select>
+  </div>
+
+  <div class="filter-row">
+    <button class="filter-btn" onclick="applyFilter()">Filter</button>
+    <button class="reset-btn" onclick="resetFilter()">Reset</button>
+  </div>
+</div>
+
+<!-- VIEW TECHNICIAN BUTTON (Option B placement) -->
+<button class="view-tech-btn" onclick="openTechStatus()">View Technicians</button>
+
+<!-- REQUEST TABLE -->
+<table>
+<thead>
+<tr>
+  <th>ID</th>
+  <th>Equipment</th>
+  <th>Department</th>
+  <th>Issue</th>
+  <th>Priority</th>
+  <th>Status</th>
+  <th>Technician</th>
+  <th>Date</th>
+  <th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="reqBody">
+
+<!-- 8 REQUESTS -->
+<tr data-id="REQ-201" data-eq="Forklift" data-issue="Hydraulic leakage">
+<td>REQ-201</td><td>Forklift</td><td>Warehouse</td><td>Hydraulic leakage</td>
+<td><span class="badge priority-high">High</span></td>
+<td><span class="badge status-open">Open</span></td>
+<td>Not Assigned</td>
+<td>2025-01-12</td>
+<td>
+  <button class="action-btn assign-btn">Assign</button>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-202" data-eq="Desktop PC" data-issue="No display">
+<td>REQ-202</td><td>Desktop PC</td><td>IT</td><td>No display</td>
+<td><span class="badge priority-medium">Medium</span></td>
+<td><span class="badge status-assigned">Assigned</span></td>
+<td>Ravi Kumar</td>
+<td>2025-01-10</td>
+<td>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-203" data-eq="Boiler Pump" data-issue="Motor overheating">
+<td>REQ-203</td><td>Boiler Pump</td><td>Production</td><td>Motor overheating</td>
+<td><span class="badge priority-critical">Critical</span></td>
+<td><span class="badge status-progress">In Progress</span></td>
+<td>Mahesh</td>
+<td>2025-01-08</td>
+<td>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-204" data-eq="CCTV Camera" data-issue="Lens issue">
+<td>REQ-204</td><td>CCTV Camera</td><td>Security</td><td>Lens issue</td>
+<td><span class="badge priority-low">Low</span></td>
+<td><span class="badge status-completed">Completed</span></td>
+<td>Suraj</td>
+<td>2025-01-05</td>
+<td>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-205" data-eq="UPS Battery" data-issue="Backup failure">
+<td>REQ-205</td><td>UPS Battery</td><td>IT</td><td>Backup failure</td>
+<td><span class="badge priority-high">High</span></td>
+<td><span class="badge status-open">Open</span></td>
+<td>Not Assigned</td>
+<td>2025-01-12</td>
+<td>
+  <button class="action-btn assign-btn">Assign</button>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-206" data-eq="Packaging Machine" data-issue="Belt tearing">
+<td>REQ-206</td><td>Packaging Machine</td><td>Warehouse</td><td>Belt tearing</td>
+<td><span class="badge priority-medium">Medium</span></td>
+<td><span class="badge status-progress">In Progress</span></td>
+<td>Anil</td>
+<td>2025-01-10</td>
+<td>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-207" data-eq="Server Rack" data-issue="Cooling fan issue">
+<td>REQ-207</td><td>Server Rack</td><td>IT</td><td>Cooling fan issue</td>
+<td><span class="badge priority-high">High</span></td>
+<td><span class="badge status-assigned">Assigned</span></td>
+<td>Ajay</td>
+<td>2025-01-09</td>
+<td>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+<tr data-id="REQ-208" data-eq="Electric Motor" data-issue="Spark detected">
+<td>REQ-208</td><td>Electric Motor</td><td>Maintenance</td><td>Spark detected</td>
+<td><span class="badge priority-critical">Critical</span></td>
+<td><span class="badge status-open">Open</span></td>
+<td>Not Assigned</td>
+<td>2025-01-11</td>
+<td>
+  <button class="action-btn assign-btn">Assign</button>
+  <button class="action-btn progress-btn">Progress</button>
+  <button class="action-btn view-btn">View</button>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+<!-- ASSIGN MODAL -->
+<div class="modal-bg" id="assignModal">
+  <div class="modal-card">
+
+    <button class="close-btn" onclick="closeAssign()">X</button>
+    <h2 style="text-align:center;margin-bottom:20px;">Assign Technician</h2>
+
+    <label>Request ID</label>
+    <input id="assignReqId" type="text" readonly>
+
+    <label>Select Technician</label>
+
+    <div class="tech-list" id="techList"></div>
+
+    <input type="hidden" id="selectedTech">
+
+    <label>Expected Completion Date</label>
+    <input type="date" id="expectedDate">
+
+    <button class="save-btn" onclick="confirmAssign()">Assign</button>
+
+  </div>
+</div>
+
+<!-- PROGRESS MODAL -->
+<div class="modal-bg" id="progressModal">
+  <div class="modal-card">
+
+    <button class="close-btn" onclick="closeProgress()">X</button>
+    <h2 style="text-align:center;margin-bottom:20px;">Progress Details</h2>
+
+    <label>Request ID</label>
+    <input id="progressReqId" type="text" readonly>
+
+    <label>Technician</label>
+    <input id="progressTech" type="text" readonly>
+
+    <label>Status</label>
+    <input id="progressStatusText" type="text" readonly>
+
+    <label>Progress Notes</label>
+    <textarea id="progressNotes" rows="7" readonly></textarea>
+
+    <button class="save-btn" onclick="closeProgress()">Close</button>
+
+  </div>
+</div>
+
+<!-- DETAILS MODAL -->
+<div class="modal-bg" id="detailsModal">
+  <div class="modal-card">
+    <button class="close-btn" onclick="closeDetails()">X</button>
+    <h2 style="text-align:center;margin-bottom:20px;">Request Details</h2>
+    <textarea id="detailsBox" rows="10" readonly></textarea>
+  </div>
+</div>
+
+<!-- TECHNICIAN STATUS MODAL -->
+<div class="modal-bg" id="techStatusModal">
+  <div class="modal-card" style="width:700px;">
+
+    <button class="close-btn" onclick="closeTechStatus()">X</button>
+    <h2 style="text-align:center;margin-bottom:20px;">Technician Status</h2>
+
+    <div id="techStatusContainer"></div>
+
+  </div>
+</div>
+
+<script>
+
+/* ============================= */
+/* DEPARTMENT-WISE TECHNICIANS   */
+/* ============================= */
+const technicians = {
+  "IT": ["Ravi Kumar", "Suresh", "Arjun", "Pankaj", "Rohit"],
+  "Maintenance": ["Mahesh", "Dinesh", "Harish", "Aman", "Chirag"],
+  "Production": ["Kartik", "Sunny", "Rakesh", "Deepak", "Sonu"],
+  "Warehouse": ["Anil", "Mukesh", "Jay", "Raju", "Sam"],
+  "Security": ["Suraj", "Manoj", "Nitin", "Aditya", "Sahil"],
+  "Logistics": ["Yogesh", "Vijay", "Sameer", "Kunal", "Lokesh"],
+  "HR": ["Ravi Sharma", "Komal", "Seema", "Nupur", "Abhishek"],
+  "Finance": ["Rahul", "Sahil", "Ishan", "Riya", "Nidhi"]
+};
+
+
+/* ===================================================== */
+/*  ASSIGN BUTTON → OPEN MODAL + SHOW TECHNICIANS         */
+/* ===================================================== */
+document.querySelectorAll(".assign-btn").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    let row = e.target.closest("tr");
+
+    // Set request ID
+    document.getElementById("assignReqId").value = row.dataset.id;
+
+    // Detect department from table
+    let dept = row.children[2].innerText;
+
+    // Load technician list
+    let list = technicians[dept];
+    let techListDiv = document.getElementById("techList");
+    techListDiv.innerHTML = "";
+
+    list.forEach(t=>{
+      let div = document.createElement("div");
+      div.className = "tech-item";
+      div.innerText = t;
+
+      // Select technician
+      div.addEventListener("click", ()=>{
+        document.querySelectorAll(".tech-item").forEach(i=>{
+          i.classList.remove("selected-tech");
+        });
+        div.classList.add("selected-tech");
+        document.getElementById("selectedTech").value = t;
+      });
+
+      techListDiv.appendChild(div);
+    });
+
+    // Open modal
+    document.getElementById("assignModal").style.display="flex";
+  });
+});
+
+
+/* ============================= */
+/* ASSIGN TECHNICIAN CONFIRM     */
+/* ============================= */
+function confirmAssign(){
+  let tech = document.getElementById("selectedTech").value;
+
+  if(tech === ""){
+    alert("Please select a technician!");
+    return;
+  }
+
+  alert("Assigned Technician: " + tech);
+
+  closeAssign();
+}
+
+
+/* ============================= */
+/* PROGRESS VIEW (READ ONLY)     */
+/* ============================= */
+document.querySelectorAll(".progress-btn").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    let row = e.target.closest("tr");
+
+    document.getElementById("progressReqId").value = row.dataset.id;
+    document.getElementById("progressTech").value = row.children[6].innerText;
+    document.getElementById("progressStatusText").value = row.children[5].innerText;
+
+    document.getElementById("progressNotes").value =
+`Latest update for ${row.dataset.id}:
+
+Technician is handling this request.
+Progress updates will appear once technician submits them.`;
+
+    document.getElementById("progressModal").style.display="flex";
+  });
+});
+
+
+/* ============================= */
+/* VIEW REQUEST DETAILS          */
+/* ============================= */
+document.querySelectorAll(".view-btn").forEach(btn=>{
+  btn.addEventListener("click", e=>{
+    let row = e.target.closest("tr");
+
+    let txt =
+`Request ID       : ${row.dataset.id}
+Equipment        : ${row.dataset.eq}
+Issue            : ${row.dataset.issue}
+Department       : ${row.children[2].innerText}
+Priority         : ${row.children[4].innerText}
+Status           : ${row.children[5].innerText}
+Technician       : ${row.children[6].innerText}
+Requested Date   : ${row.children[7].innerText}`;
+
+    document.getElementById("detailsBox").value = txt;
+
+    document.getElementById("detailsModal").style.display="flex";
+  });
+});
+
+
+/* ============================= */
+/* TECHNICIAN STATUS CHECK       */
+/* ============================= */
+function openTechStatus(){
+
+  let container = document.getElementById("techStatusContainer");
+  container.innerHTML = "";
+
+  // Read all rows from request table
+  const rows = document.querySelectorAll("#reqBody tr");
+
+  // Create technician usage map
+  let techStatus = {};
+
+  // Mark all technicians NOT ASSIGNED by default
+  for(let dept in technicians){
+    technicians[dept].forEach(t=>{
+      techStatus[t] = "Not Assigned";
+    });
+  }
+
+  // Update assigned technicians
+  rows.forEach(r=>{
+    let tech = r.children[6].innerText.trim();
+    let status = r.children[5].innerText.trim();
+
+    if(tech !== "Not Assigned" && (status==="Assigned" || status==="In Progress")){
+      techStatus[tech] = "Assigned";
+    }
+  });
+
+  // Build modal content department-wise
+  for(let dept in technicians){
+
+    // Department block
+    let block = document.createElement("div");
+    block.className = "tech-dept-block";
+
+    let title = document.createElement("div");
+    title.className = "tech-dept-title";
+    title.innerText = dept + " Department";
+    block.appendChild(title);
+
+    // List technicians under department
+    technicians[dept].forEach(t=>{
+      let row = document.createElement("div");
+      row.className = "tech-status-row";
+
+      let name = document.createElement("div");
+      name.innerText = t;
+
+      let badge = document.createElement("div");
+      badge.className = "tech-status-badge";
+
+      if(techStatus[t] === "Assigned"){
+        badge.classList.add("status-assigned-badge");
+        badge.innerText = "Assigned";
+      } else {
+        badge.classList.add("status-notassigned-badge");
+        badge.innerText = "Not Assigned";
+      }
+
+      row.appendChild(name);
+      row.appendChild(badge);
+
+      block.appendChild(row);
+    });
+
+    container.appendChild(block);
+  }
+
+  // Show modal
+  document.getElementById("techStatusModal").style.display="flex";
+}
+
+
+/* ============================= */
+/* CLOSE MODALS                  */
+/* ============================= */
+function closeAssign(){ document.getElementById("assignModal").style.display="none"; }
+function closeProgress(){ document.getElementById("progressModal").style.display="none"; }
+function closeDetails(){ document.getElementById("detailsModal").style.display="none"; }
+function closeTechStatus(){ document.getElementById("techStatusModal").style.display="none"; }
+
+
+/* ============================= */
+/* FILTERS                       */
+/* ============================= */
+function applyFilter(){
+  let search = searchInput.value.toLowerCase();
+  let dept   = filterDept.value.toLowerCase();
+  let priority = filterPriority.value.toLowerCase();
+  let status = filterStatus.value.toLowerCase();
+
+  document.querySelectorAll("#reqBody tr").forEach(r=>{
+    let text = r.innerText.toLowerCase();
+    let show = true;
+
+    if(search && !text.includes(search)) show = false;
+    if(dept && !text.includes(dept)) show = false;
+    if(priority && !text.includes(priority)) show = false;
+    if(status && !text.includes(status)) show = false;
+
+    r.style.display = show ? "" : "none";
+  });
+}
+
+function resetFilter(){
+  searchInput.value = "";
+  filterDept.value = "";
+  filterPriority.value = "";
+  filterStatus.value = "";
+
+  document.querySelectorAll("#reqBody tr").forEach(r=> r.style.display="");
+}
+
+</script>
+
+</body>
+</html>

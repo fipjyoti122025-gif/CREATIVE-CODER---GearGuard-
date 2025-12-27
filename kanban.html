@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maintenance Kanban Board</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* ================= LAYOUT ================= */
+body {
+  background: #b7c6e7;
+  color: black;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ================= NAVBAR CONTAINER ================= */
+#navbar-container {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+/* ================= MAIN ================= */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: #e5edff;
+}
+
+/* ================= HEADER ================= */
+.page-header {
+  margin-bottom: 25px;
+}
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #3e4772;
+}
+.page-header p {
+  margin-top: 6px;
+  color: #3e4772;
+}
+
+/* ================= KANBAN BOARD ================= */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ================= COLUMN ================= */
+.kanban-column {
+  background: #b7c6e7;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 520px;
+  transition: background 0.2s;
+}
+
+.kanban-column.drag-over {
+  background: #b7c6e7;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.column-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.column-count {
+  background: #1A2A4F;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* ================= CARD ================= */
+.kanban-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  cursor: grab;
+  border-left: 6px solid transparent;
+}
+
+.kanban-card.overdue {
+  border-left-color: #e74c3c;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: #555;
+  margin: 6px 0 12px;
+}
+
+/* ================= CARD FOOTER ================= */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.technician {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.technician img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.technician span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.due-date {
+  font-size: 12px;
+  color: #888;
+}
+
+.overdue-text {
+  color: #e74c3c;
+  font-weight: 700;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1200px) {
+  .kanban-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  #navbar-container {
+    width: 100%;
+  }
+
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+  <!-- NAVBAR -->
+  <div id="navbar-container"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <div class="page-header">
+      <h1>Maintenance Kanban Board</h1>
+      <p>Drag requests across stages to track maintenance workflow</p>
+    </div>
+
+    <div class="kanban-board">
+
+      <!-- NEW -->
+      <div class="kanban-column" data-status="new">
+        <div class="column-header">
+          <div class="column-title">New</div>
+          <div class="column-count">2</div>
+        </div>
+
+        <div class="kanban-card overdue" draggable="true">
+          <div class="card-title">CNC Machine #04</div>
+          <div class="card-desc">Calibration error detected</div>
+          <div class="card-footer">
+            <div class="technician">
+              <img src="https://i.pravatar.cc/40?img=12">
+              <span>Rahul</span>
+            </div>
+            <div class="due-date overdue-text">Overdue</div>
+          </div>
+        </div>
+
+        <div class="kanban-card" draggable="true">
+          <div class="card-title">Printer 01</div>
+          <div class="card-desc">Paper jam issue</div>
+          <div class="card-footer">
+            <div class="technician">
+              <img src="https://i.pravatar.cc/40?img=5">
+              <span>Priya</span>
+            </div>
+            <div class="due-date">Today</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IN PROGRESS -->
+      <div class="kanban-column" data-status="progress">
+        <div class="column-header">
+          <div class="column-title">In Progress</div>
+          <div class="column-count">1</div>
+        </div>
+
+        <div class="kanban-card" draggable="true">
+          <div class="card-title">Forklift B2</div>
+          <div class="card-desc">Hydraulic leakage</div>
+          <div class="card-footer">
+            <div class="technician">
+              <img src="https://i.pravatar.cc/40?img=8">
+              <span>Amit</span>
+            </div>
+            <div class="due-date">Tomorrow</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPAIRED -->
+      <div class="kanban-column" data-status="repaired">
+        <div class="column-header">
+          <div class="column-title">Repaired</div>
+          <div class="column-count">1</div>
+        </div>
+
+        <div class="kanban-card" draggable="true">
+          <div class="card-title">UPS Battery</div>
+          <div class="card-desc">Battery replaced successfully</div>
+          <div class="card-footer">
+            <div class="technician">
+              <img src="https://i.pravatar.cc/40?img=9">
+              <span>Neha</span>
+            </div>
+            <div class="due-date">Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCRAP -->
+      <div class="kanban-column" data-status="scrap">
+        <div class="column-header">
+          <div class="column-title">Scrap</div>
+          <div class="column-count">0</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= LOAD NAVBAR ================= */
+fetch("navbar.html")
+  .then(res => res.text())
+  .then(data => document.getElementById("navbar-container").innerHTML = data);
+
+/* ================= DRAG & DROP ================= */
+let draggedCard = null;
+
+function updateCounts() {
+  document.querySelectorAll(".kanban-column").forEach(col => {
+    const count = col.querySelectorAll(".kanban-card").length;
+    col.querySelector(".column-count").innerText = count;
+  });
+}
+
+document.addEventListener("dragstart", e => {
+  if (e.target.classList.contains("kanban-card")) {
+    draggedCard = e.target;
+    setTimeout(() => draggedCard.style.display = "none", 0);
+  }
+});
+
+document.addEventListener("dragend", () => {
+  if (draggedCard) draggedCard.style.display = "block";
+  draggedCard = null;
+  updateCounts();
+});
+
+document.querySelectorAll(".kanban-column").forEach(column => {
+  column.addEventListener("dragover", e => {
+    e.preventDefault();
+    column.classList.add("drag-over");
+  });
+
+  column.addEventListener("dragleave", () => {
+    column.classList.remove("drag-over");
+  });
+
+  column.addEventListener("drop", () => {
+    if (draggedCard) column.appendChild(draggedCard);
+    column.classList.remove("drag-over");
+    updateCounts();
+  });
+});
+</script>
+
+</body>
+</html>
