@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employees | Manager Dashboard</title>
+
+  <!-- SHARED -->
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/manager-layout.css" />
+
+  <style>
+    /* ===== MANAGER EMPLOYEES PAGE ===== */
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .page-header p {
+      font-size: 14px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    /* FILTERS */
+    .filters {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filters input,
+    .filters select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      min-width: 180px;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .badge {
+      padding: 5px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-employee {
+      background: #e0e7ff;
+      color: #4338ca;
+    }
+
+    .badge-technician {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-inactive {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .action {
+      background: none;
+      border: none;
+      color: #6366f1;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <!-- MANAGER NAVBAR -->
+  <div id="navbar-container"></div>
+
+  <!-- MAIN -->
+  <main class="main-container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <div>
+        <h1>Employees & Technicians</h1>
+        <p>Manage people who report issues and perform maintenance</p>
+      </div>
+      <button class="btn-primary">+ Add Person</button>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="card">
+      <div class="filters">
+        <input type="text" placeholder="Search by name" />
+
+        <select>
+          <option value="">All Roles</option>
+          <option>Employee (Request Creator)</option>
+          <option>Technician (Maintenance)</option>
+        </select>
+
+        <select>
+          <option value="">All Teams</option>
+          <option>Mechanical</option>
+          <option>Electrical</option>
+          <option>IT Support</option>
+        </select>
+
+        <select>
+          <option value="">Availability</option>
+          <option>Active</option>
+          <option>Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- PEOPLE TABLE -->
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Team</th>
+            <th>Requests Raised</th>
+            <th>Active Tasks</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Rahul Sharma</td>
+            <td><span class="badge badge-technician">Technician</span></td>
+            <td>Mechanical</td>
+            <td>—</td>
+            <td>3</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>
+              <button class="action">View</button> |
+              <button class="action">Edit</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Priya Singh</td>
+            <td><span class="badge badge-technician">Technician</span></td>
+            <td>IT Support</td>
+            <td>—</td>
+            <td>2</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>
+              <button class="action">View</button> |
+              <button class="action">Edit</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Amit Patel</td>
+            <td><span class="badge badge-employee">Employee</span></td>
+            <td>Production</td>
+            <td>12</td>
+            <td>—</td>
+            <td><span class="badge badge-inactive">Inactive</span></td>
+            <td>
+              <button class="action">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/navbar.js"></script>
+
+</body>
+</html>
